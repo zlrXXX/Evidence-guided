@@ -1,0 +1,69 @@
+{
+  "schema_version": "certify-cbt-counsellor-rloo-reward-v2",
+  "scope": "SYNTHETIC_SIMULATION_PROXY_NOT_CLINICAL_EFFICACY",
+  "components": {
+    "framework_fidelity": {
+      "initial_weight": 0.30,
+      "bounds": [0.27, 0.33],
+      "source": "deterministic legality plus source-hidden Luna-high framework score",
+      "does_not_reward": ["agreement", "optimism", "verbosity", "symptom reduction", "technique completion", "session ending"]
+    },
+    "cbt_progress": {
+      "initial_weight": 0.25,
+      "bounds": [0.21, 0.29],
+      "source": "frozen CBT Evidence Tracker plus deterministic monotonic official-step executor",
+      "transition_values": {"adjacent": 0.3333333333333333, "two_rank_jump": 0.6666666666666666, "three_rank_jump": 1.0, "stay_or_rejected": 0.0},
+      "confidence_is_gate_not_reward_multiplier": true
+    },
+    "empathy": {
+      "initial_weight": 0.20,
+      "bounds": [0.17, 0.23],
+      "source": "source-hidden Luna-high grounded-empathy score",
+      "requires": "specific proportionate non-assumptive support grounded in visible patient language"
+    },
+    "naturalness": {
+      "initial_weight": 0.10,
+      "bounds": [0.08, 0.12],
+      "source": "0.70 Luna-high dialogue naturalness plus 0.30 frozen counsellor-SFT response alignment",
+      "guidance": "believable counsellor speech, ordinary wording, one manageable focus, natural turn-taking"
+    },
+    "resistance_transition": {
+      "initial_weight": 0.15,
+      "bounds": [0.12, 0.18],
+      "source": "temperature-calibrated state-aware expected utility under the frozen selected Resistance State Tracker, with positive credit gated by concurrent framework-fidelity and empathy judgments",
+      "state_utility": {
+        "REJECTING_DISENGAGED": {"STAY": 0.25, "BETTER": 0.75},
+        "AMBIVALENT": {"WORSE": -1.0, "STAY": 0.20, "BETTER": 1.0},
+        "COOPERATIVE": {"WORSE": -1.0, "STAY": 0.50, "BETTER": 0.75},
+        "COLLABORATIVE_EXPLORATION": {"WORSE": -1.0, "STAY": 1.0}
+      },
+      "raw_expected_utility": "sum_d calibrated_probability(d | state, visible_history, candidate) * state_utility[state][d] over graph-legal directions",
+      "positive_credit_gate": "min((framework_reward + 1) / 2, (empathy_reward + 1) / 2)",
+      "final_reward": "min(raw_expected_utility, 0) + positive_credit_gate * max(raw_expected_utility, 0)",
+      "negative_utility_is_ungated": true,
+      "reuses_existing_luna_scores": true,
+      "additional_luna_requests": 0,
+      "threshold_forcing_stay": false
+    }
+  },
+  "hard_penalty": {
+    "value": 1.0,
+    "triggers": [
+      "invalid six-field JSON action",
+      "illegal technique or step transition",
+      "premature or contradictory session ending",
+      "empty or role-breaking counsellor response",
+      "unsafe or contract-breaking Luna hard failure"
+    ],
+    "dynamically_weighted": false
+  },
+  "dynamic_weights": {
+    "method": "bounded fair-and-stable mirror descent",
+    "update_every_prompts": 64,
+    "trajectories_per_update": 256,
+    "step_size": 0.10,
+    "maximum_absolute_change_per_update": 0.002,
+    "development_selection_uses": "fixed initial weights",
+    "reason": "allow gradual compensation for lagging objectives without rapid naturalness-weight collapse"
+  }
+}

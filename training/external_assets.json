@@ -1,0 +1,48 @@
+{
+  "base_models": {
+    "qwen3": {
+      "model_id": "Qwen/Qwen3-8B",
+      "revision": "b968826d9c46dd6066d109eabc6255188de91218"
+    },
+    "llama31": {
+      "model_id": "meta-llama/Llama-3.1-8B-Instruct",
+      "revision": "0e9e39f249a16976918f6564b8830bc894c89659"
+    }
+  },
+  "resistance_forecaster": {
+    "files": [
+      "tracker_state.pt",
+      "tracker_config.json",
+      "base_model_config.json",
+      "temperature.json",
+      "tokenizer/"
+    ],
+    "tracker_state_sha256": "135BEAD553FACF6D4922D9F03EF97707DAA0A426C41077415CDED80FAF30A0F7"
+  },
+  "patient_state_expression_checker": {
+    "files": [
+      "model/model.safetensors",
+      "model/config.json",
+      "model/tokenizer.json",
+      "rl_inference_contract.json"
+    ],
+    "model_sha256": "AE4BAC0D7DA7B5F57B8B793DA83D090A681111D0B5345D2CA8F9A22FE46661F6"
+  },
+  "historical_cbt_evidence_scorer": {
+    "files": [
+      "tracker_state.pt",
+      "tracker_config.json",
+      "temperature.json",
+      "tokenizer/"
+    ],
+    "tracker_state_sha256": "D683F9298F5801D29869328949F934F5614B46688FC2CE1B7DE6C8B465AC799A",
+    "tracker_config_sha256": "AD29A8AE9A63C0BB9591779EFC4CC9F84A76D2972E2B94A37425E678E438D5C1",
+    "temperature_sha256": "50D02776AA31655A3F5E9091A8207154B3F224D341DB61585BB6D51289FF6098"
+  },
+  "patient_context_bindings": {
+    "cactus/qwen3": "9C5B69EEEC97C890021FB7AF564BD8B9F0E55BD81ABB84E11A552EAAB14FABAA",
+    "cactus/llama31": "9C5B69EEEC97C890021FB7AF564BD8B9F0E55BD81ABB84E11A552EAAB14FABAA",
+    "eeyore/qwen3": "2FC344A53A13A37CDC4E69291099A149007EAC2DEA3693EBEDAAE13835433902",
+    "eeyore/llama31": "1B7FEA0448569BF2EA94E9DCCF1DD908E06A4415BBA6A28C08603D55E47D82D0"
+  }
+}

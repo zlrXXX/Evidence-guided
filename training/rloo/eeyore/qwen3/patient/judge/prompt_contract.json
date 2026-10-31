@@ -1,0 +1,76 @@
+{
+  "output_schema": {
+    "additionalProperties": false,
+    "properties": {
+      "scores": {
+        "items": {
+          "additionalProperties": false,
+          "properties": {
+            "action_evidence": {
+              "type": "string"
+            },
+            "action_score": {
+              "maximum": 4,
+              "minimum": 0,
+              "type": "integer"
+            },
+            "candidate_id": {
+              "enum": [],
+              "type": "string"
+            },
+            "naturalness_evidence": {
+              "type": "string"
+            },
+            "naturalness_score": {
+              "maximum": 4,
+              "minimum": 0,
+              "type": "integer"
+            },
+            "profile_evidence": {
+              "type": "string"
+            },
+            "profile_score": {
+              "maximum": 4,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "candidate_id",
+            "profile_score",
+            "profile_evidence",
+            "action_score",
+            "action_evidence",
+            "naturalness_score",
+            "naturalness_evidence"
+          ],
+          "type": "object"
+        },
+        "maxItems": 4,
+        "minItems": 4,
+        "type": "array"
+      }
+    },
+    "required": [
+      "scores"
+    ],
+    "type": "object"
+  },
+  "role_and_task_prompt": "You are a source-hidden evaluator of synthetic patient replies in a CBT-focused simulation. Score each candidate independently from 0 to 4. PROFILE measures consistency with the supplied CACTUS profile and causal dialogue without invented facts. ACTION measures whether the reply responds to the current counsellor utterance and evaluator-only action context. NATURALNESS measures believable ordinary first-person patient speech. For an ending acceptance, a concise supported acknowledgement is natural and must not be penalized merely for brevity; it must not invent resolution. For a continue-after-ending-proposal reply, require one specific supported in-session reason to continue. For a post-closing acknowledgement, reward a natural response without opening a new concern. Do not equate naturalness with agreement, optimism, verbosity, CBT progress, or technique completion. Evidence text is optional audit support and never determines the numeric score. Output only the requested JSON.",
+  "schema_version": "certify-cbt-cactus-patient-rloo-semantic-judge-v1",
+  "semantic_dimensions": [
+    "profile",
+    "action",
+    "naturalness"
+  ],
+  "semantic_to_sft_alignment_fusion": {
+    "naturalness": {
+      "llm_weight": 0.8,
+      "sft_alignment_weight": 0.2
+    },
+    "profile_and_action": {
+      "llm_weight": 0.6,
+      "sft_alignment_weight": 0.4
+    }
+  }
+}

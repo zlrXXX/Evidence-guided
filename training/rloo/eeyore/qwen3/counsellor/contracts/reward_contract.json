@@ -1,0 +1,128 @@
+{
+  "components": {
+    "cbt_progress": {
+      "bounds": [
+        0.21,
+        0.29
+      ],
+      "confidence_is_gate_not_reward_multiplier": true,
+      "initial_weight": 0.25,
+      "source": "frozen CBT Evidence Tracker plus deterministic monotonic official-step executor",
+      "transition_values": {
+        "adjacent": 0.3333333333333333,
+        "stay_or_rejected": 0.0,
+        "three_rank_jump": 1.0,
+        "two_rank_jump": 0.6666666666666666
+      }
+    },
+    "empathy": {
+      "bounds": [
+        0.17,
+        0.23
+      ],
+      "initial_weight": 0.2,
+      "requires": "specific proportionate non-assumptive support grounded in visible patient language",
+      "source": "source-hidden Luna-high grounded-empathy score"
+    },
+    "framework_fidelity": {
+      "bounds": [
+        0.27,
+        0.33
+      ],
+      "does_not_reward": [
+        "agreement",
+        "optimism",
+        "verbosity",
+        "symptom reduction",
+        "technique completion",
+        "session ending"
+      ],
+      "initial_weight": 0.3,
+      "source": "deterministic legality plus source-hidden Luna-high framework score"
+    },
+    "naturalness": {
+      "bounds": [
+        0.08,
+        0.12
+      ],
+      "guidance": "believable counsellor speech, ordinary wording, one manageable focus, natural turn-taking",
+      "initial_weight": 0.1,
+      "source": "0.70 Luna-high dialogue naturalness plus 0.30 frozen counsellor-SFT response alignment"
+    },
+    "resistance_transition": {
+      "additional_luna_requests": 0,
+      "bounds": [
+        0.12,
+        0.18
+      ],
+      "final_reward": "min(raw_expected_utility, 0) + positive_credit_gate * max(raw_expected_utility, 0)",
+      "initial_weight": 0.15,
+      "negative_utility_is_ungated": true,
+      "positive_credit_gate": "min((framework_reward + 1) / 2, (empathy_reward + 1) / 2)",
+      "raw_expected_utility": "sum_d calibrated_probability(d | state, visible_history, candidate) * state_utility[state][d] over graph-legal directions",
+      "reuses_existing_luna_scores": true,
+      "source": "temperature-calibrated state-aware expected utility under the frozen selected Resistance State Tracker, with positive credit gated by concurrent framework-fidelity and empathy judgments",
+      "state_utility": {
+        "AMBIVALENT": {
+          "BETTER": 1.0,
+          "STAY": 0.2,
+          "WORSE": -1.0
+        },
+        "COLLABORATIVE_EXPLORATION": {
+          "STAY": 1.0,
+          "WORSE": -1.0
+        },
+        "COOPERATIVE": {
+          "BETTER": 0.75,
+          "STAY": 0.5,
+          "WORSE": -1.0
+        },
+        "REJECTING_DISENGAGED": {
+          "BETTER": 0.75,
+          "STAY": 0.25
+        }
+      },
+      "threshold_forcing_stay": false
+    }
+  },
+  "dynamic_weights": {
+    "development_selection_uses": "fixed initial weights",
+    "maximum_absolute_change_per_update": 0.002,
+    "method": "bounded fair-and-stable mirror descent",
+    "reason": "allow gradual compensation for lagging objectives without rapid naturalness-weight collapse",
+    "step_size": 0.1,
+    "trajectories_per_update": 256,
+    "update_every_prompts": 64
+  },
+  "hard_penalty": {
+    "dynamically_weighted": false,
+    "triggers": [
+      "invalid six-field JSON action",
+      "illegal technique or step transition",
+      "premature or contradictory session ending",
+      "empty or role-breaking counsellor response",
+      "unsafe or contract-breaking Luna hard failure"
+    ],
+    "value": 1.0
+  },
+  "schema_version": "certify-cbt-cactus-counsellor-rloo-reward-v2",
+  "scope": "SYNTHETIC_SIMULATION_PROXY_NOT_CLINICAL_EFFICACY",
+  "semantic_observability": {
+    "action_selection_context": "source-hidden causal context before the decision",
+    "candidate_contract": [
+      "sampled_decision",
+      "local_legality",
+      "selected_official_cbt_step",
+      "response_phase",
+      "response_engagement_cue",
+      "counsellor_utterance"
+    ],
+    "framework_score_rule": "not above the weaker of decision appropriateness and response execution",
+    "premature_or_contradictory_ending_is_luna_hard_failure": true,
+    "response_phases": [
+      "IN_SESSION_RESPONSE",
+      "SWITCH_INTRODUCTION",
+      "END_PROPOSAL"
+    ]
+  }
+}

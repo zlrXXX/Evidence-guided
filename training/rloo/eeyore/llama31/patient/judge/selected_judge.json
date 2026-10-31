@@ -1,0 +1,6 @@
+{
+  "prompt_contract_sha256": "662677B6D8D92827C3F5C9C3322A7EE9E1145F0A7C9B15617FB6545AE5384BA0",
+  "provenance": "SAME_FAMILY_SYNTHETIC_SIMULATION_PROXY_NOT_CLINICAL_GROUND_TRUTH",
+  "selected_model": "gpt-5.6-luna",
+  "selected_reasoning_effort": "high"
+}

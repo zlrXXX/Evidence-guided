@@ -1,0 +1,47 @@
+{
+  "bounds": {
+    "counsellor_action_dependence": [
+      0.27,
+      0.33
+    ],
+    "intended_resistance_realization": [
+      0.03,
+      0.07
+    ],
+    "naturalness": [
+      0.32,
+      0.38
+    ],
+    "profile_consistency": [
+      0.27,
+      0.33
+    ]
+  },
+  "ending_bonus": 0.0,
+  "ending_short_reply_penalty": 0.0,
+  "equal_prompt_weight": true,
+  "forbidden_rewards": [
+    "CBT_PROGRESS",
+    "COUNSELLING_QUALITY",
+    "SHARED_THERAPY_SUCCESS",
+    "SYMPTOM_REDUCTION"
+  ],
+  "initial_weights": {
+    "counsellor_action_dependence": 0.3,
+    "intended_resistance_realization": 0.05,
+    "naturalness": 0.35,
+    "profile_consistency": 0.3
+  },
+  "rationale": "The prior patient RLOO showed a provisional overall advantage while naturalness and resistance-specific gains were uncertain, and the frozen expression proxy was weak for BETTER/WORSE cells. Naturalness therefore receives more weight; the resistance proxy is retained for framework alignment but downweighted to reduce proxy gaming.",
+  "schema_version": "certify-cbt-cactus-patient-rloo-reward-v1",
+  "semantic_fusion": {
+    "naturalness": {
+      "llm": 0.8,
+      "sft_alignment": 0.2
+    },
+    "profile_and_action": {
+      "llm": 0.6,
+      "sft_alignment": 0.4
+    }
+  }
+}

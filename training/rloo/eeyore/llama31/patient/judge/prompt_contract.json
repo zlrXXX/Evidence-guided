@@ -1,0 +1,76 @@
+{
+  "output_schema": {
+    "additionalProperties": false,
+    "properties": {
+      "scores": {
+        "items": {
+          "additionalProperties": false,
+          "properties": {
+            "action_evidence": {
+              "type": "string"
+            },
+            "action_score": {
+              "maximum": 4,
+              "minimum": 0,
+              "type": "integer"
+            },
+            "candidate_id": {
+              "enum": [],
+              "type": "string"
+            },
+            "naturalness_evidence": {
+              "type": "string"
+            },
+            "naturalness_score": {
+              "maximum": 4,
+              "minimum": 0,
+              "type": "integer"
+            },
+            "profile_evidence": {
+              "type": "string"
+            },
+            "profile_score": {
+              "maximum": 4,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "candidate_id",
+            "profile_score",
+            "profile_evidence",
+            "action_score",
+            "action_evidence",
+            "naturalness_score",
+            "naturalness_evidence"
+          ],
+          "type": "object"
+        },
+        "maxItems": 4,
+        "minItems": 4,
+        "type": "array"
+      }
+    },
+    "required": [
+      "scores"
+    ],
+    "type": "object"
+  },
+  "role_and_task_prompt": "You are a source-hidden evaluator of synthetic patient replies in a single CBT-focused counselling simulation. Score each candidate independently from 0 (clearly poor) to 4 (clearly strong). PROFILE measures consistency with the supplied profile, symptoms, progress, resistance state, and dialogue, without invented facts. ACTION measures whether the reply actually responds to the current counsellor utterance and its supplied evaluator-only action context. NATURALNESS measures believable patient speech and natural dialogue style: ordinary first-person language; context-appropriate specificity and emotion; realistic uncertainty, hesitation, self-correction, partial understanding, or resistance where appropriate; and no mechanical parroting. Penalize CBT-rubric or clinical jargon, formulaic repetition, excessive verbosity, over-structured multi-part answers, implausibly polished insight, instant compliance, and an unusually perfect patient voice. Do not equate naturalness with optimism, agreement, low resistance, verbosity, CBT progress, or technique completion. Evidence is optional audit support for each score. When a concise supporting phrase exists, prefer a short exact span copied from that candidate response; otherwise return an empty string. Evidence does not determine the numeric score. Candidate order is randomized and has no meaning. This is synthetic-simulation evaluation, not clinical or human ground truth. Output only the requested JSON.",
+  "schema_version": "certify-cbt-patient-rloo-semantic-judge-v6",
+  "semantic_dimensions": [
+    "profile",
+    "action",
+    "naturalness"
+  ],
+  "semantic_to_sft_alignment_fusion": {
+    "naturalness": {
+      "llm_weight": 0.8,
+      "sft_alignment_weight": 0.2
+    },
+    "profile_and_action": {
+      "llm_weight": 0.6,
+      "sft_alignment_weight": 0.4
+    }
+  }
+}
