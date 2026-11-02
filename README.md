@@ -1,7 +1,7 @@
 # Code and Evaluation Preview
 
 - **cactus/**: CACTUS patient profiles, SFT and RLOO training and development data, test and evaluation sets, and source counselling sessions.
-- - **eeyore/**: EEYORE patient profiles, SFT and RLOO training and development data, test and evaluation sets, and a session index recording dataset splits.
+- **eeyore/**: EEYORE patient profiles, SFT and RLOO training and development data, test and evaluation sets, and a session index recording dataset splits.
 - **training/**: Counsellor and patient SFT and RLOO training code for CACTUS and EEYORE.
 - **evaluation/**: CTRS evaluation pipelines with English and Chinese scoring prompts.
 
